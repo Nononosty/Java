@@ -8,11 +8,13 @@ public class Player {
     public Player() {
         this.playlists = new ArrayList<>();
     }
+    public List<Playlist> getPlaylists() {
+        return new ArrayList<>(playlists);
+    }
     private int currentPlaylistIndex = 0;
     private int currentSongIndex = 0;
 
     public void showSongList() {
-        //(int i = 0; i < playlists.size(); i++)
         for (Playlist playlist : playlists) {
             System.out.println("Плейлист " + playlist.getName() + ":");
             playlist.showPlaylist();
@@ -51,6 +53,14 @@ public class Player {
     }
 
     public void createPlaylist(String name) {
+        if (name == null || name.isEmpty()) {
+            throw new IllegalArgumentException("Имя плейлиста не может быть пустым");
+        }
+        for (Playlist existingPlaylist : playlists) {
+            if (existingPlaylist.getName().equals(name)) {
+                throw new IllegalArgumentException("Плейлист с таким именем уже существует");
+            }
+        }
         playlists.add(new Playlist(name));
     }
 
