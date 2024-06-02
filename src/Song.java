@@ -1,5 +1,6 @@
 import java.io.Serializable;
 
+
 public class Song implements Serializable {
     private final String title;
     private final String artist;
@@ -22,6 +23,8 @@ public class Song implements Serializable {
     public int getDuration() {
         return duration;
     }
+
+
 
     @Override
     public String toString() {

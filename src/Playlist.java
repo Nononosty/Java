@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.io.Serializable;
 
+
 public class Playlist implements Serializable {
     private final String name;
     private final List<Song> songs;

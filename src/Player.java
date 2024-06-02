@@ -2,12 +2,14 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class Player {
     private final List<Playlist> playlists;
 
     public Player() {
         this.playlists = new ArrayList<>();
     }
+
     public List<Playlist> getPlaylists() {
         return new ArrayList<>(playlists);
     }
@@ -35,6 +37,22 @@ public class Player {
                 System.out.println("Ошибка: неправильный индекс плейлиста");
             }
         }
+
+    public void playSong(int playlistIndex, int songIndex) {
+        if (playlistIndex >= 0 && playlistIndex < playlists.size()) {
+            Playlist playlist = playlists.get(playlistIndex);
+            if (songIndex >= 0 && songIndex < playlist.getSongs().size()) {
+                Song song = playlist.getSongs().get(songIndex);
+                playPlaylist(songIndex);
+                System.out.println("Воспроизведение: " + song.getTitle() + " - " + song.getArtist());
+                currentSongIndex = songIndex;
+            } else {
+                System.out.println("Ошибка: неправильный индекс плейлиста");//JOptionPane.showMessageDialog(frame, "Ошибка: неправильный индекс песни", "Ошибка", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            System.out.println("Ошибка");//JOptionPane.showMessageDialog(frame, "Ошибка: неправильный индекс плейлиста", "Ошибка", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
     public void playPlaylist(int index) {
         if (index >= 0 && index < playlists.size()) {
@@ -64,55 +82,59 @@ public class Player {
         playlists.add(new Playlist(name));
     }
 
-    public void loadPlaylist(int index) {
+    public boolean loadPlaylist(int index) {
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(System.getProperty("user.home") + "/Desktop/playlist" + index + ".dat"))) {
             Playlist playlist = (Playlist) in.readObject();
             playlists.add(playlist);
-            System.out.println("Плейлист успешно загружен.");
+            return true;
         } catch (IOException | ClassNotFoundException e) {
-            System.out.println("Ошибка при загрузке плейлиста: " + e.getMessage());
+            return false;
         }
+
     }
 
-    public void savePlaylist(int index) {
+    public boolean savePlaylist(int index) {
         if (index >= 0 && index < playlists.size()) {
             Playlist playlist = playlists.get(index);
-            //           try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("playlist" + index + ".dat"))) {
             try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(System.getProperty("user.home") + "/Desktop/playlist" + index + ".dat"))) {
                 out.writeObject(playlist);
-                System.out.println("Плейлист сохранен успешно.");
+                return true;
             } catch (IOException e) {
-                System.out.println("Ошибка при сохранении плейлиста: " + e.getMessage());
+                return false;
             }
         } else {
-            System.out.println("Ошибка: неправильный индекс плейлиста");
+            return false;
         }
     }
 
-    public void deletePlaylist(int index) {
+    public boolean deletePlaylist(int index) {
         if (index >= 0 && index < playlists.size()) {
             playlists.remove(index);
+            return true;
         } else {
-            System.out.println("Ошибка: неправильный индекс плейлиста");
+            return false;
         }
     }
 
-    public void addSongToPlaylist(int playlistIndex, String title, String artist, int duration) {
+    public boolean addSongToPlaylist(int playlistIndex, String title, String artist, int duration) {
         if (playlistIndex >= 0 && playlistIndex < playlists.size()) {
             Playlist playlist = playlists.get(playlistIndex);
             playlist.addSong(new Song(title, artist, duration));
+            return true;
         } else {
-            System.out.println("Ошибка: неправильный индекс плейлиста");
+            return false;
         }
     }
 
-    public void removeSongFromPlaylist(int playlistIndex, int songIndex) {
+    public boolean removeSongFromPlaylist(int playlistIndex, int songIndex) {
         if (playlistIndex >= 0 && playlistIndex < playlists.size()) {
             Playlist playlist = playlists.get(playlistIndex);
-            playlist.removeSong(songIndex);
-        } else {
-            System.out.println("Ошибка: неправильный индекс плейлиста");
+            if (songIndex >= 0 && songIndex < playlist.getSongs().size()) {
+                playlist.removeSong(songIndex);
+                return true;
+            }
         }
+        return false;
     }
 
     public void playPreviousSong() {
@@ -154,6 +176,14 @@ public class Player {
         Playlist currentPlaylist = playlists.get(currentPlaylistIndex);
         Song currentSong = currentPlaylist.getSongs().get(currentSongIndex);
         System.out.println("Играет: " + "'" + currentSong.getTitle() + "'" + " - " + currentSong.getArtist() + " - " + currentSong.getDuration() + " секунд");
+    }
+
+    public List<Song> getPlaylistSongs(int index) {
+        if (index < 0 || index >= playlists.size()) {
+            throw new IndexOutOfBoundsException("Индекс плейлиста вне диапазона");
+        }
+        Playlist playlist = playlists.get(index);
+        return playlist.getSongs();
     }
 
 }
