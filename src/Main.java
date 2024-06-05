@@ -1,4 +1,4 @@
-import java.util.*;
+/*import java.util.*;
 
 class MusicPlayerApp {
     private static final Player musicPlayer = new Player();
@@ -37,7 +37,7 @@ class MusicPlayerApp {
                 case 3:
                     System.out.print("Введите индекс плейлиста: ");
                     int playlistIndexToSave = scanner.nextInt();
-                    musicPlayer.savePlaylist(playlistIndexToSave);
+                    musicPlayer.savePlaylistWithPaths(playlistIndexToSave);
                     break;
                 case 4:
                     //0_o_-_-_o_0
@@ -97,3 +97,4 @@ class MusicPlayerApp {
         scanner.close();
     }
 }
+*/

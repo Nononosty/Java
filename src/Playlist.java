@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.io.Serializable;
 
+
 public class Playlist implements Serializable {
     private final String name;
     private final List<Song> songs;
@@ -17,6 +18,7 @@ public class Playlist implements Serializable {
     public List<Song> getSongs() {
         return songs;
     }
+
 
     public void addSong(Song song) {
         songs.add(song);
